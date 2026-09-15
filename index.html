@@ -6,8 +6,8 @@
   <title>115-1民法分組登錄系統</title>
   <style>
     body { font-family: "Microsoft JhengHei", -apple-system, BlinkMacSystemFont, sans-serif; background: #f4f6f9; color: #333; margin: 0; padding: 15px; }
-    .container { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
-    .card { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .container { max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
+    .card { background: #fff; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
     h2, h3 { margin-top: 0; color: #333; }
     p { color: #666; }
     
@@ -26,8 +26,8 @@
       font-weight: bold;
     }
     
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+    .form-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; }
+    @media (max-width: 868px) { .form-grid { grid-template-columns: 1fr; } }
     
     .smart-paste-box {
       background: #eef6ff;
@@ -39,27 +39,42 @@
     .smart-paste-box label {
       font-weight: bold;
       color: #0056b3;
-      font-size: 0.9em;
+      font-size: 0.95em;
       display: block;
       margin-bottom: 5px;
     }
     .smart-paste-box textarea {
       height: 60px;
       resize: vertical;
-      font-size: 0.85em;
+      font-size: 0.9em;
     }
 
-    .member-item { background: #f8f9fa; padding: 10px; border-radius: 6px; margin-bottom: 8px; border: 1px solid #eee; }
-    .member-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; color: #333; }
+    .topic-box {
+      background: #f8f9fa;
+      border: 1px solid #e2e8f0;
+      padding: 14px;
+      border-radius: 8px;
+      margin-bottom: 18px;
+    }
+    .topic-box label {
+      font-weight: bold;
+      color: #2d3748;
+      font-size: 0.95em;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .member-item { background: #f8f9fa; padding: 12px; border-radius: 6px; margin-bottom: 10px; border: 1px solid #eee; }
+    .member-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; color: #333; }
     .input-row { display: flex; gap: 8px; margin-bottom: 6px; }
     
     input[type="text"], textarea { 
       width: 100%; 
-      padding: 8px; 
+      padding: 9px 12px; 
       background: #ffffff;
       color: #333333;
       border: 1px solid #ccc; 
-      border-radius: 4px; 
+      border-radius: 6px; 
       box-sizing: border-box; 
       font-size: 0.95em;
     }
@@ -69,17 +84,18 @@
       box-shadow: 0 0 4px rgba(0, 123, 255, 0.25);
     }
 
-    .date-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .date-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .date-card { 
       background: #ffffff;
       border: 1px solid #e0e0e0; 
-      padding: 8px 12px; 
+      padding: 10px 14px; 
       border-radius: 6px; 
       cursor: pointer; 
       display: flex; 
       justify-content: space-between; 
       align-items: center; 
       color: #333333;
+      font-size: 0.95em;
       transition: all 0.2s ease-in-out;
     }
     .date-card:hover { 
@@ -106,13 +122,13 @@
     .btn-clear-all { background: #e67e22; color: #ffffff; margin-bottom: 10px; border: none; }
     .btn-clear-all:hover { background: #d35400; }
 
-    .btn-del { background: #dc3545; color: white; border: none; padding: 2px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8em; }
+    .btn-del { background: #dc3545; color: white; border: none; padding: 3px 8px; border-radius: 4px; cursor: pointer; font-size: 0.82em; }
     .btn-del:hover { background: #c82333; }
 
-    .btn-text-clear { background: none; border: none; color: #dc3545; cursor: pointer; font-size: 0.85em; text-decoration: underline; padding: 0; }
+    .btn-text-clear { background: none; border: none; color: #dc3545; cursor: pointer; font-size: 0.88em; text-decoration: underline; padding: 0; }
     .btn-text-clear:hover { color: #bd2130; }
 
-    .btn-submit-half { width: 100%; margin: 0; display: block; text-align: center; font-size: 1em; }
+    .btn-submit-half { width: 100%; margin: 0; display: block; text-align: center; font-size: 1.05em; padding: 12px; }
     
     .btn-delete-record {
       width: 100%;
@@ -121,41 +137,44 @@
       background-color: #dc3545;
       color: #ffffff;
       border: none;
-      padding: 10px 15px;
+      padding: 12px;
       border-radius: 6px;
       font-weight: bold;
       cursor: pointer;
       text-align: center;
-      font-size: 1em;
+      font-size: 1.05em;
       transition: all 0.2s ease-in-out;
     }
     .btn-delete-record:hover { background-color: #c82333; }
 
-    .dashboard-table { width: 100%; min-width: 760px; border-collapse: collapse; margin-top: 10px; background: #ffffff; }
-    .dashboard-table th, .dashboard-table td { border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: top; }
-    .dashboard-table th { background: #e9ecef; color: #333333; font-weight: bold; }
-    .dashboard-table .group-col { width: 55px; white-space: nowrap; }
-    .dashboard-table .empty-cell { color: #aaa; min-height: 30px; }
+    /* 版面擴大與字型適配 */
+    .dashboard-table { width: 100%; min-width: 960px; border-collapse: collapse; margin-top: 10px; background: #ffffff; table-layout: fixed; }
+    .dashboard-table th, .dashboard-table td { border: 1px solid #dee2e6; padding: 10px; text-align: left; vertical-align: top; word-wrap: break-word; }
+    .dashboard-table th { background: #e9ecef; color: #333333; font-weight: bold; text-align: center; font-size: 1em; }
+    .dashboard-table .group-col { width: 70px; white-space: nowrap; text-align: center; vertical-align: middle; }
+    .dashboard-table .empty-cell { color: #aaa; min-height: 40px; display: block; text-align: center; padding: 10px 0; font-size: 0.9em; }
     .dashboard-refreshing { opacity: 0.72; transition: opacity 0.2s; }
     
     .group-box { 
-      background: #e8f4ea; 
+      background: #f4fbf6; 
       border: 1px solid #c3e6cb;
       color: #155724;
-      padding: 8px; 
-      border-radius: 4px; 
-      margin-top: 6px; 
-      font-size: 0.85em; 
-      text-align: left; 
+      padding: 10px 12px; 
+      border-radius: 6px; 
+      margin-bottom: 8px; 
+      font-size: 0.92em; 
+      line-height: 1.45;
     }
-    .group-box strong { color: #0b2e13; }
+    .group-box:last-child { margin-bottom: 0; }
+    .group-box strong { color: #0b2e13; font-size: 1.02em; display: inline-block; margin-bottom: 3px; }
+    .group-box .topic-tag { margin-top: 6px; padding-top: 6px; border-top: 1px dashed #b1dfbb; color: #1e4620; word-break: break-all; }
 
     .status-badge { 
-      padding: 4px 8px; 
-      border-radius: 4px; 
-      font-size: 0.9em; 
+      padding: 6px 12px; 
+      border-radius: 6px; 
+      font-size: 0.92em; 
       font-weight: bold; 
-      margin-bottom: 10px; 
+      margin-bottom: 12px; 
       display: inline-block; 
     }
     .badge-new { background: #e3f2fd; color: #0d47a1; }
@@ -198,7 +217,7 @@
   
   <div class="card" id="searchCard">
     <h2>115-1民法分組登錄系統</h2>
-    <p style="font-size:0.9em;">請輸入學號登錄：</p>
+    <p style="font-size:0.95em;">請輸入學號登錄：</p>
     <div class="login-box">
       <input type="text" id="searchStudentId" placeholder="請輸入學號 (例: 411400000)" onkeydown="if(event.key === 'Enter') checkUser()">
       <button type="button" id="btnCheckUser" class="btn btn-blue" onclick="checkUser()">開始</button>
@@ -209,7 +228,7 @@
     <div id="loginSuccessBar" class="login-success-bar">已登入：<span id="loggedInStudentId"></span></div>
     <div style="display:flex; justify-content:space-between; align-items:center;">
       <h2 id="formTitle">組員資料登記</h2>
-      <button type="button" style="background:none; border:none; color:#007bff; cursor:pointer; font-weight:bold;" onclick="resetToSearch()">‹ 重新登入</button>
+      <button type="button" style="background:none; border:none; color:#007bff; cursor:pointer; font-weight:bold; font-size:0.95em;" onclick="resetToSearch()">‹ 重新登入</button>
     </div>
     
     <div id="statusBadgeArea"></div>
@@ -221,7 +240,6 @@
         <div>
           <h3>組員登記</h3>
 
-          <!-- 新增：智慧填入快捷區塊 -->
           <div class="smart-paste-box">
             <label for="smartPasteInput">智慧填入</label>
             <textarea id="smartPasteInput" placeholder="直接複製貼上整組資料（例如：&#10;公行五 41111111 王小明）" oninput="handleSmartPaste(this)"></textarea>
@@ -236,10 +254,18 @@
         </div>
 
         <div>
-          <h3>選擇報告日期</h3>
+          <h3>報告主題與日期</h3>
+          
+          <!-- 新增：前端報告主題輸入框 -->
+          <div class="topic-box">
+            <label for="topicInput">報告主題</label>
+            <input type="text" id="topicInput" placeholder="請輸入報告主題或題目（選填）">
+          </div>
+
+          <h3 style="font-size:1.1em; margin-bottom:10px;">選擇報告日期</h3>
           <div id="dateOptionsArea" class="date-options">載入中...</div>
           
-          <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
             <button type="submit" id="btnSubmit" class="btn btn-submit-half">確認提交</button>
             <button type="button" id="btnDeleteRecord" class="btn-delete-record hidden" onclick="cancelRegistration()">刪除/取消報名紀錄</button>
           </div>
@@ -252,9 +278,9 @@
     <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
       <div>
         <h3 style="margin-bottom:4px;">目前報名狀況</h3>
-        <p style="font-size:0.82em; margin:0;"></p>
+        <p style="font-size:0.85em; margin:0; color:#666;"></p>
       </div>
-      <span id="dashboardLastUpdated" style="font-size:0.78em; color:#777; white-space:nowrap;">載入中...</span>
+      <span id="dashboardLastUpdated" style="font-size:0.82em; color:#777; white-space:nowrap;">載入中...</span>
     </div>
     <div id="dashboardArea" style="overflow-x:auto; margin-top:10px;">載入中...</div>
   </div>
@@ -262,7 +288,7 @@
 </div>
 
 <script>
-  const GAS_URL = "https://script.google.com/macros/s/AKfycbyq2vR4ajqd1pMliNzkO_HgXnbJZZTTxrb1KsipmXaUAETNRSBn7w5eB9ZRf7xbYCZL/exec";
+  const GAS_URL = "https://script.google.com/macros/s/AKfycby3H_OPa0zu47TAmTUvDEpn-B5JEsEb5jxsPCsEYSgSo1cJCGfysWFC9mL2j4816mWjBA/exec";
 
   const STATIC_MASTER_CHOICES = [
     "2026/11/09",
@@ -287,11 +313,6 @@
     }
   }
 
-  // 進入頁面時不主動呼叫 GAS。
-  // 避免使用者剛開頁面就同時發出初始化請求，接著登入又再發請求。
-
-  // GAS 請求統一處理 loading、逾時與 fetch 模式的重試。
-  // google.script.run 本身沒有可由前端 await/重試的 HTTP response，因此保持單次呼叫。
   async function sendToGAS(action, payload = {}, retries = 3, useLoading = true) {
     if (useLoading) showLoading();
     try {
@@ -342,13 +363,13 @@
     }
   }
 
-  // 強大解析文字格式算法
+  // 強大解析文字格式算法（兼顧有無【成員1:】前綴）
   function parseMemberString(text) {
     const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
     const parsed = [];
 
     lines.forEach(line => {
-      let cleanLine = line.replace(/^成員\d+:\s*/, '').trim();
+      let cleanLine = line.replace(/^(?:成員\d+|成員|\[成員\d+\]|【成員\d+】)[:：]\s*/i, '').trim();
       const tokens = cleanLine.split(/[\s\t,]+/).filter(Boolean);
       
       let id = "", dept = "", name = "";
@@ -377,7 +398,6 @@
     return parsed;
   }
 
-  // 處理智慧快速貼上框事件
   function handleSmartPaste(textarea) {
     const pasteText = textarea.value;
     if (!pasteText.trim()) return;
@@ -385,7 +405,7 @@
     const parsed = parseMemberString(pasteText);
     if (parsed.length > 0) {
       fillParsedMembers(parsed);
-      textarea.value = ''; // 填完自動清空貼上區
+      textarea.value = '';
     }
   }
 
@@ -409,7 +429,6 @@
   let dashboardRequestInProgress = false;
   let dashboardRequestPromise = null;
 
-  // 登入頁面的看板獨立更新：不使用全螢幕 Loading，且與登入查詢分開。
   async function refreshLoginDashboard() {
     if (dashboardRequestInProgress || isCheckingUser) return;
 
@@ -428,11 +447,11 @@
             updated.textContent = '最後更新：' + new Date().toLocaleTimeString('zh-TW', { hour12: false });
           }
         } else if (area && area.innerText === '載入中...') {
-          area.innerHTML = '<div style="color:#999; padding:12px 0;">目前無法取得報名狀況，稍後會自動重試。</div>';
+          area.innerHTML = '<div style="color:#999; padding:12px 0; text-align:center;">目前無法取得報名狀況，稍後會自動重試。</div>';
         }
       } catch (err) {
         if (area && area.innerText === '載入中...') {
-          area.innerHTML = '<div style="color:#999; padding:12px 0;">目前無法取得報名狀況，稍後會自動重試。</div>';
+          area.innerHTML = '<div style="color:#999; padding:12px 0; text-align:center;">目前無法取得報名狀況，稍後會自動重試。</div>';
         }
       }
     })();
@@ -452,7 +471,6 @@
     dashboardRefreshTimer = setInterval(refreshLoginDashboard, 15000);
   }
 
-  // 頁面開啟時只啟動背景看板，不會和登入按鈕同時搶第一個請求。
   window.addEventListener('load', startDashboardAutoRefresh);
 
   async function checkUser() {
@@ -474,13 +492,10 @@
     button.innerText = "查詢中...";
 
     try {
-      // 若背景看板剛好正在讀取，先等它結束，再開始登入查詢。
-      // 這樣可以避免登入查詢與看板查詢同時碰 Google 試算表。
       if (dashboardRequestPromise) {
         await dashboardRequestPromise;
       }
 
-      // 第一步只查學號，避免登入時與其他 GAS 請求同時競爭。
       const resCheck = await sendToGAS('checkStudentRegistration', { studentId: inputId });
 
       if (!resCheck || !resCheck.success) {
@@ -488,7 +503,6 @@
         return;
       }
 
-      // 學號確認成功後才取得日期名額。
       const resOptions = await sendToGAS('getInitAndOptionsData');
       if (!resOptions || !resOptions.success) {
         alert((resOptions && (resOptions.message || resOptions.error)) || "無法取得報名日期資料，請稍後再試。");
@@ -516,19 +530,15 @@
     const badgeArea = document.getElementById('statusBadgeArea');
     const rowIndexInput = document.getElementById('editingRowIndex');
     const btnDelete = document.getElementById('btnDeleteRecord');
+    const topicInput = document.getElementById('topicInput');
 
-    // 登入成功後切換成「表單頁」：
-    // 隱藏登入區，但保留目前報名狀況，並放在表單下方。
     loggedInStudentId = inputIdFromSearch();
     document.getElementById('loggedInStudentId').textContent = loggedInStudentId;
     document.getElementById('searchCard').classList.add('hidden');
     document.getElementById('dashboardCard').classList.remove('hidden');
     formCard.classList.remove('hidden');
 
-    // 登入後繼續讓下方報名狀況每 15 秒自動更新。
     startDashboardAutoRefresh();
-
-    // 捲到頁面最上方，讓使用者立即看到「已登入」及資料輸入區。
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     const counts = resOptions && resOptions.success ? resOptions.counts : {};
@@ -538,12 +548,14 @@
       badgeArea.innerHTML = `<span class="status-badge badge-edit">找到已有報名紀錄，目前為「修改資料」模式</span>`;
       rowIndexInput.value = res.rowIndex;
       btnDelete.classList.remove('hidden');
+      topicInput.value = res.data.topic || ''; // 帶入既有主題
       renderMembersData(res.data.members);
       renderOptions(counts, maxLimit, res.data.date);
     } else {
       badgeArea.innerHTML = `<span class="status-badge badge-new">查無報名紀錄，目前為「新報名」模式</span>`;
       rowIndexInput.value = "-1";
       btnDelete.classList.add('hidden');
+      topicInput.value = ''; // 清空主題
       renderMembersData([{ name: '', dept: '', id: inputIdFromSearch() }]);
       renderOptions(counts, maxLimit, null);
     }
@@ -568,16 +580,15 @@
   }
 
   function resetToSearch() {
-    // 回到登入頁
     document.getElementById('formCard').classList.add('hidden');
     document.getElementById('searchCard').classList.remove('hidden');
     document.getElementById('dashboardCard').classList.remove('hidden');
     document.getElementById('searchStudentId').value = '';
     document.getElementById('smartPasteInput').value = '';
+    document.getElementById('topicInput').value = '';
     document.getElementById('loggedInStudentId').textContent = '';
     loggedInStudentId = '';
 
-    // 回到登入頁後重新啟動即時看板
     startDashboardAutoRefresh();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -632,6 +643,7 @@
   function clearAllInputsWithoutNotice() {
     document.querySelectorAll('#membersContainer input[type="text"]').forEach(input => input.value = '');
     document.getElementById('smartPasteInput').value = '';
+    document.getElementById('topicInput').value = '';
     document.querySelectorAll('input[name="optDate"]').forEach(radio => radio.checked = false);
   }
 
@@ -655,7 +667,7 @@
     const container = document.getElementById('dashboardArea');
     if (!container) return;
     if (!data) {
-      container.innerHTML = '<div style="color:#999; padding:12px 0;">無法取得狀況資料</div>';
+      container.innerHTML = '<div style="color:#999; padding:12px 0; text-align:center;">無法取得狀況資料</div>';
       return;
     }
 
@@ -674,10 +686,11 @@
       groups.forEach((g, i) => {
         const num = ['一','二','三'][i] || (i + 1);
         const membersText = (typeof g === 'string' ? g : g.members) || '';
-        const topicText = (typeof g === 'object' && g.topic) ? String(g.topic) : '';
+        const topicText = (typeof g === 'object' && g.topic) ? String(g.topic).trim() : '';
+        
         cell += `<div class="group-box"><strong>${shortD} 第${num}組</strong><br>${membersText.replace(/\n/g, '<br>')}`;
         if (topicText) {
-          cell += `<br><span style="font-size:0.9em;">主題：${topicText.replace(/\n/g, '<br>')}</span>`;
+          cell += `<div class="topic-tag">📌 <strong>主題：</strong>${topicText.replace(/\n/g, '<br>')}</div>`;
         }
         cell += '</div>';
       });
@@ -724,7 +737,7 @@
             <input type="radio" name="optDate" value="${cleanChoice}" ${disabled} ${checked}>
             ${cleanChoice.replace(/^\d{4}\//, '')}
           </div>
-          <span style="font-size:0.8em; color:${isFull && !isMyCurrentDate ? 'red' : '#28a745'}">
+          <span style="font-size:0.85em; color:${isFull && !isMyCurrentDate ? '#dc3545' : '#28a745'}; font-weight:bold;">
             ${isMyCurrentDate ? '目前選擇' : (isFull ? '額滿' : '剩 ' + (remain > 0 ? remain : 0) + ' 名')}
           </span>
         </label>
@@ -739,6 +752,7 @@
     const selectedDate = document.querySelector('input[name="optDate"]:checked');
     if (!selectedDate) return alert("請選擇日期！");
 
+    const topicValue = document.getElementById('topicInput').value.trim();
     const members = [];
     let hasInvalidId = false;
 
@@ -756,6 +770,7 @@
     const payload = {
       rowIndex: document.getElementById('editingRowIndex').value,
       date: selectedDate.value,
+      topic: topicValue, // 包含主題傳送給後端
       members: members
     };
 
@@ -774,8 +789,6 @@
       btnSubmit.innerText = originalText;
     }
   };
-
-
 </script>
 </body>
 </html>
