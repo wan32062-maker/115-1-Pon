@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>115-1民法分組登錄系統</title>
+  <style>
+    body { font-family: "Microsoft JhengHei", -apple-system, BlinkMacSystemFont, sans-serif; background: #f4f6f9; color: #333; margin: 0; padding: 15px; }
+    .container { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
+    .card { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    h2, h3 { margin-top: 0; color: #333; }
+    p { color: #666; }
+    
+    .login-box { display: flex; gap: 10px; max-width: 450px; margin-top: 10px; align-items: center; }
+    .login-box .btn { white-space: nowrap; word-break: keep-all; padding: 10px 20px; }
+
+    .hidden { display: none !important; }
+
+    .login-success-bar {
+      background: #e8f5e9;
+      border: 1px solid #c8e6c9;
+      color: #2e7d32;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      font-weight: bold;
+    }
+    
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+    
+    .smart-paste-box {
+      background: #eef6ff;
+      border: 1px dashed #007bff;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+    .smart-paste-box label {
+      font-weight: bold;
+      color: #0056b3;
+      font-size: 0.9em;
+      display: block;
+      margin-bottom: 5px;
+    }
+    .smart-paste-box textarea {
+      height: 60px;
+      resize: vertical;
+      font-size: 0.85em;
+    }
+
+    .member-item { background: #f8f9fa; padding: 10px; border-radius: 6px; margin-bottom: 8px; border: 1px solid #eee; }
+    .member-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; color: #333; }
+    .input-row { display: flex; gap: 8px; margin-bottom: 6px; }
+    
+    input[type="text"], textarea { 
+      width: 100%; 
+      padding: 8px; 
+      background: #ffffff;
+      color: #333333;
+      border: 1px solid #ccc; 
+      border-radius: 4px; 
+      box-sizing: border-box; 
+      font-size: 0.95em;
+    }
+    input[type="text"]:focus, textarea:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 4px rgba(0, 123, 255, 0.25);
+    }
+
+    .date-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .date-card { 
+      background: #ffffff;
+      border: 1px solid #e0e0e0; 
+      padding: 8px 12px; 
+      border-radius: 6px; 
+      cursor: pointer; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      color: #333333;
+      transition: all 0.2s ease-in-out;
+    }
+    .date-card:hover { 
+      background: #f0f7ff; 
+    }
+    
+    .btn { 
+      background: #28a745; 
+      color: white; 
+      border: none; 
+      padding: 10px 15px; 
+      border-radius: 6px; 
+      cursor: pointer; 
+      font-weight: bold; 
+      transition: all 0.2s ease-in-out;
+    }
+    .btn:hover { background: #218838; }
+    .btn-blue { background: #007bff; }
+    .btn-blue:hover { background: #0069d9; }
+    
+    .btn-add { background: #6c757d; color: #ffffff; margin-bottom: 10px; border: none; }
+    .btn-add:hover { background: #5a6268; }
+
+    .btn-clear-all { background: #e67e22; color: #ffffff; margin-bottom: 10px; border: none; }
+    .btn-clear-all:hover { background: #d35400; }
+
+    .btn-del { background: #dc3545; color: white; border: none; padding: 2px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8em; }
+    .btn-del:hover { background: #c82333; }
+
+    .btn-text-clear { background: none; border: none; color: #dc3545; cursor: pointer; font-size: 0.85em; text-decoration: underline; padding: 0; }
+    .btn-text-clear:hover { color: #bd2130; }
+
+    .btn-submit-half { width: 100%; margin: 0; display: block; text-align: center; font-size: 1em; }
+    
+    .btn-delete-record {
+      width: 100%;
+      margin: 0;
+      display: block;
+      background-color: #dc3545;
+      color: #ffffff;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      font-size: 1em;
+      transition: all 0.2s ease-in-out;
+    }
+    .btn-delete-record:hover { background-color: #c82333; }
+
+    .dashboard-table { width: 100%; min-width: 760px; border-collapse: collapse; margin-top: 10px; background: #ffffff; }
+    .dashboard-table th, .dashboard-table td { border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: top; }
+    .dashboard-table th { background: #e9ecef; color: #333333; font-weight: bold; }
+    .dashboard-table .group-col { width: 55px; white-space: nowrap; }
+    .dashboard-table .empty-cell { color: #aaa; min-height: 30px; }
+    .dashboard-refreshing { opacity: 0.72; transition: opacity 0.2s; }
+    
+    .group-box { 
+      background: #e8f4ea; 
+      border: 1px solid #c3e6cb;
+      color: #155724;
+      padding: 8px; 
+      border-radius: 4px; 
+      margin-top: 6px; 
+      font-size: 0.85em; 
+      text-align: left; 
+    }
+    .group-box strong { color: #0b2e13; }
+
+    .status-badge { 
+      padding: 4px 8px; 
+      border-radius: 4px; 
+      font-size: 0.9em; 
+      font-weight: bold; 
+      margin-bottom: 10px; 
+      display: inline-block; 
+    }
+    .badge-new { background: #e3f2fd; color: #0d47a1; }
+    .badge-edit { background: #fff3cd; color: #856404; }
+    
+    button:disabled {
+      background-color: #cccccc !important;
+      color: #666666 !important;
+      cursor: not-allowed !important;
+      opacity: 0.7;
+    }
+
+    .loading-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .loading-box {
+      background: #ffffff;
+      padding: 20px 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      font-size: 1.1em;
+      font-weight: bold;
+      color: #333333;
+    }
+  </style>
+</head>
+<body>
+
+<div id="loadingOverlay" class="loading-overlay hidden">
+  <div class="loading-box">資料處理中，請稍後...</div>
+</div>
+
+<div class="container">
+  
+  <div class="card" id="searchCard">
+    <h2>115-1民法分組登錄系統</h2>
+    <p style="font-size:0.9em;">請輸入學號登錄：</p>
+    <div class="login-box">
+      <input type="text" id="searchStudentId" placeholder="請輸入學號 (例: 411400000)" onkeydown="if(event.key === 'Enter') checkUser()">
+      <button type="button" id="btnCheckUser" class="btn btn-blue" onclick="checkUser()">開始</button>
+    </div>
+  </div>
+
+  <div class="card hidden" id="formCard">
+    <div id="loginSuccessBar" class="login-success-bar">已登入：<span id="loggedInStudentId"></span></div>
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h2 id="formTitle">組員資料登記</h2>
+      <button type="button" style="background:none; border:none; color:#007bff; cursor:pointer; font-weight:bold;" onclick="resetToSearch()">‹ 重新登入</button>
+    </div>
+    
+    <div id="statusBadgeArea"></div>
+
+    <form id="signupForm">
+      <input type="hidden" id="editingRowIndex" value="-1">
+
+      <div class="form-grid">
+        <div>
+          <h3>組員登記</h3>
+
+          <!-- 新增：智慧填入快捷區塊 -->
+          <div class="smart-paste-box">
+            <label for="smartPasteInput">智慧填入</label>
+            <textarea id="smartPasteInput" placeholder="直接複製貼上整組資料（例如：&#10;公行五 41111111 王小明）" oninput="handleSmartPaste(this)"></textarea>
+          </div>
+
+          <div id="membersContainer"></div>
+          
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn btn-add" onclick="addMemberInput()">+ 添加欄位</button>
+            <button type="button" class="btn btn-clear-all" onclick="clearAllInputsWithoutNotice()">清空目前輸入</button>
+          </div>
+        </div>
+
+        <div>
+          <h3>選擇報告日期</h3>
+          <div id="dateOptionsArea" class="date-options">載入中...</div>
+          
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+            <button type="submit" id="btnSubmit" class="btn btn-submit-half">確認提交</button>
+            <button type="button" id="btnDeleteRecord" class="btn-delete-record hidden" onclick="cancelRegistration()">刪除/取消報名紀錄</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="card" id="dashboardCard">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+      <div>
+        <h3 style="margin-bottom:4px;">目前報名狀況</h3>
+        <p style="font-size:0.82em; margin:0;"></p>
+      </div>
+      <span id="dashboardLastUpdated" style="font-size:0.78em; color:#777; white-space:nowrap;">載入中...</span>
+    </div>
+    <div id="dashboardArea" style="overflow-x:auto; margin-top:10px;">載入中...</div>
+  </div>
+
+</div>
+
+<script>
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbyq2vR4ajqd1pMliNzkO_HgXnbJZZTTxrb1KsipmXaUAETNRSBn7w5eB9ZRf7xbYCZL/exec";
+
+  const STATIC_MASTER_CHOICES = [
+    "2026/11/09",
+    "2026/11/16",
+    "2026/11/23",
+    "2026/11/30",
+    "2026/12/07",
+    "2026/12/14"
+  ];
+
+  let loadingCount = 0;
+
+  function showLoading() {
+    loadingCount++;
+    document.getElementById('loadingOverlay').classList.remove('hidden');
+  }
+
+  function hideLoading() {
+    loadingCount = Math.max(0, loadingCount - 1);
+    if (loadingCount === 0) {
+      document.getElementById('loadingOverlay').classList.add('hidden');
+    }
+  }
+
+  // 進入頁面時不主動呼叫 GAS。
+  // 避免使用者剛開頁面就同時發出初始化請求，接著登入又再發請求。
+
+  // GAS 請求統一處理 loading、逾時與 fetch 模式的重試。
+  // google.script.run 本身沒有可由前端 await/重試的 HTTP response，因此保持單次呼叫。
+  async function sendToGAS(action, payload = {}, retries = 3, useLoading = true) {
+    if (useLoading) showLoading();
+    try {
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        return await new Promise((resolve) => {
+          const runner = google.script.run
+            .withSuccessHandler(res => resolve(res))
+            .withFailureHandler(err => resolve({
+              success: false,
+              message: err && err.message ? err.message : String(err)
+            }));
+
+          if (action === 'checkStudentRegistration') runner.checkStudentRegistration(payload.studentId);
+          else if (action === 'deleteRegistration') runner.deleteRegistration(payload.studentId, payload.rowIndex);
+          else if (action === 'getInitAndOptionsData') runner.getInitAndOptionsData();
+          else if (action === 'submitForm') runner.submitForm(payload.payload);
+          else resolve({ success: false, message: '未知的請求指令' });
+        });
+      }
+
+      for (let attempt = 0; attempt <= retries; attempt++) {
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 12000);
+
+          const response = await fetch(GAS_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: action, ...payload }),
+            signal: controller.signal
+          });
+          clearTimeout(timeoutId);
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
+
+          return await response.json();
+        } catch (err) {
+          if (attempt === retries) {
+            return { success: false, message: '伺服器忙碌中，請稍後再試。' };
+          }
+          await new Promise(r => setTimeout(r, 800 * Math.pow(2, attempt)));
+        }
+      }
+    } finally {
+      if (useLoading) hideLoading();
+    }
+  }
+
+  // 強大解析文字格式算法
+  function parseMemberString(text) {
+    const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    const parsed = [];
+
+    lines.forEach(line => {
+      let cleanLine = line.replace(/^成員\d+:\s*/, '').trim();
+      const tokens = cleanLine.split(/[\s\t,]+/).filter(Boolean);
+      
+      let id = "", dept = "", name = "";
+      const remainingTokens = [];
+
+      tokens.forEach(token => {
+        if (!id && /^[A-Za-z0-9]{8,11}$/.test(token)) {
+          id = token.toUpperCase();
+        } else {
+          remainingTokens.push(token);
+        }
+      });
+
+      if (remainingTokens.length >= 2) {
+        dept = remainingTokens[0];
+        name = remainingTokens.slice(1).join(' ');
+      } else if (remainingTokens.length === 1) {
+        name = remainingTokens[0];
+      }
+
+      if (id || name || dept) {
+        parsed.push({ dept, id, name });
+      }
+    });
+
+    return parsed;
+  }
+
+  // 處理智慧快速貼上框事件
+  function handleSmartPaste(textarea) {
+    const pasteText = textarea.value;
+    if (!pasteText.trim()) return;
+
+    const parsed = parseMemberString(pasteText);
+    if (parsed.length > 0) {
+      fillParsedMembers(parsed);
+      textarea.value = ''; // 填完自動清空貼上區
+    }
+  }
+
+  function fillParsedMembers(parsedList) {
+    const container = document.getElementById('membersContainer');
+    container.innerHTML = '';
+    
+    parsedList.forEach((m, idx) => {
+      if (idx >= 15) return;
+      addMemberInput();
+      const items = document.querySelectorAll('.member-item');
+      items[idx].querySelector('.m-name').value = m.name || '';
+      items[idx].querySelector('.m-dept').value = m.dept || '';
+      items[idx].querySelector('.m-id').value = m.id || '';
+    });
+  }
+
+  let isCheckingUser = false;
+  let loggedInStudentId = "";
+  let dashboardRefreshTimer = null;
+  let dashboardRequestInProgress = false;
+  let dashboardRequestPromise = null;
+
+  // 登入頁面的看板獨立更新：不使用全螢幕 Loading，且與登入查詢分開。
+  async function refreshLoginDashboard() {
+    if (dashboardRequestInProgress || isCheckingUser) return;
+
+    dashboardRequestInProgress = true;
+    const area = document.getElementById('dashboardArea');
+    const card = document.getElementById('dashboardCard');
+    if (card) card.classList.add('dashboard-refreshing');
+
+    dashboardRequestPromise = (async () => {
+      try {
+        const res = await sendToGAS('getInitAndOptionsData', {}, 3, false);
+        if (res && res.success) {
+          renderDashboard(res.dashboard);
+          const updated = document.getElementById('dashboardLastUpdated');
+          if (updated) {
+            updated.textContent = '最後更新：' + new Date().toLocaleTimeString('zh-TW', { hour12: false });
+          }
+        } else if (area && area.innerText === '載入中...') {
+          area.innerHTML = '<div style="color:#999; padding:12px 0;">目前無法取得報名狀況，稍後會自動重試。</div>';
+        }
+      } catch (err) {
+        if (area && area.innerText === '載入中...') {
+          area.innerHTML = '<div style="color:#999; padding:12px 0;">目前無法取得報名狀況，稍後會自動重試。</div>';
+        }
+      }
+    })();
+
+    try {
+      await dashboardRequestPromise;
+    } finally {
+      dashboardRequestPromise = null;
+      dashboardRequestInProgress = false;
+      if (card) card.classList.remove('dashboard-refreshing');
+    }
+  }
+
+  function startDashboardAutoRefresh() {
+    refreshLoginDashboard();
+    if (dashboardRefreshTimer) clearInterval(dashboardRefreshTimer);
+    dashboardRefreshTimer = setInterval(refreshLoginDashboard, 15000);
+  }
+
+  // 頁面開啟時只啟動背景看板，不會和登入按鈕同時搶第一個請求。
+  window.addEventListener('load', startDashboardAutoRefresh);
+
+  async function checkUser() {
+    if (isCheckingUser) return;
+
+    const input = document.getElementById('searchStudentId');
+    const button = document.getElementById('btnCheckUser');
+    const inputId = input.value.trim().toUpperCase();
+
+    if (!inputId) return alert("請輸入學號！");
+    if (inputId.length < 8 || inputId.length > 11) {
+      return alert("格式錯誤，請輸入 8~11 碼完整學號");
+    }
+
+    isCheckingUser = true;
+    input.disabled = true;
+    button.disabled = true;
+    const originalText = button.innerText;
+    button.innerText = "查詢中...";
+
+    try {
+      // 若背景看板剛好正在讀取，先等它結束，再開始登入查詢。
+      // 這樣可以避免登入查詢與看板查詢同時碰 Google 試算表。
+      if (dashboardRequestPromise) {
+        await dashboardRequestPromise;
+      }
+
+      // 第一步只查學號，避免登入時與其他 GAS 請求同時競爭。
+      const resCheck = await sendToGAS('checkStudentRegistration', { studentId: inputId });
+
+      if (!resCheck || !resCheck.success) {
+        alert((resCheck && resCheck.message) || "查詢失敗，請稍後再試。");
+        return;
+      }
+
+      // 學號確認成功後才取得日期名額。
+      const resOptions = await sendToGAS('getInitAndOptionsData');
+      if (!resOptions || !resOptions.success) {
+        alert((resOptions && (resOptions.message || resOptions.error)) || "無法取得報名日期資料，請稍後再試。");
+        return;
+      }
+
+      handleCheckResult(resCheck, resOptions);
+      if (resOptions && resOptions.success) {
+        renderDashboard(resOptions.dashboard);
+        const updated = document.getElementById('dashboardLastUpdated');
+        if (updated) updated.textContent = '最後更新：' + new Date().toLocaleTimeString('zh-TW', { hour12: false });
+      }
+    } finally {
+      isCheckingUser = false;
+      input.disabled = false;
+      button.disabled = false;
+      button.innerText = originalText;
+    }
+  }
+
+  function handleCheckResult(res, resOptions) {
+    if (!res.success) return alert(res.message);
+
+    const formCard = document.getElementById('formCard');
+    const badgeArea = document.getElementById('statusBadgeArea');
+    const rowIndexInput = document.getElementById('editingRowIndex');
+    const btnDelete = document.getElementById('btnDeleteRecord');
+
+    // 登入成功後切換成「表單頁」：
+    // 隱藏登入區，但保留目前報名狀況，並放在表單下方。
+    loggedInStudentId = inputIdFromSearch();
+    document.getElementById('loggedInStudentId').textContent = loggedInStudentId;
+    document.getElementById('searchCard').classList.add('hidden');
+    document.getElementById('dashboardCard').classList.remove('hidden');
+    formCard.classList.remove('hidden');
+
+    // 登入後繼續讓下方報名狀況每 15 秒自動更新。
+    startDashboardAutoRefresh();
+
+    // 捲到頁面最上方，讓使用者立即看到「已登入」及資料輸入區。
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    const counts = resOptions && resOptions.success ? resOptions.counts : {};
+    const maxLimit = resOptions && resOptions.success ? resOptions.maxLimit : 2;
+
+    if (res.hasRecord) {
+      badgeArea.innerHTML = `<span class="status-badge badge-edit">找到已有報名紀錄，目前為「修改資料」模式</span>`;
+      rowIndexInput.value = res.rowIndex;
+      btnDelete.classList.remove('hidden');
+      renderMembersData(res.data.members);
+      renderOptions(counts, maxLimit, res.data.date);
+    } else {
+      badgeArea.innerHTML = `<span class="status-badge badge-new">查無報名紀錄，目前為「新報名」模式</span>`;
+      rowIndexInput.value = "-1";
+      btnDelete.classList.add('hidden');
+      renderMembersData([{ name: '', dept: '', id: inputIdFromSearch() }]);
+      renderOptions(counts, maxLimit, null);
+    }
+  }
+
+  function inputIdFromSearch() {
+    return document.getElementById('searchStudentId').value.trim().toUpperCase();
+  }
+
+  async function cancelRegistration() {
+    const studentId = loggedInStudentId || document.getElementById('searchStudentId').value.trim();
+    const rowIndex = document.getElementById('editingRowIndex').value;
+
+    if (rowIndex === "-1") return;
+    if (confirm("確定要刪除這筆報名紀錄嗎？此動作無法復原！")) {
+      const res = await sendToGAS('deleteRegistration', { studentId: studentId, rowIndex: rowIndex });
+      alert(res.message);
+      if (res.success) {
+        resetToSearch();
+      }
+    }
+  }
+
+  function resetToSearch() {
+    // 回到登入頁
+    document.getElementById('formCard').classList.add('hidden');
+    document.getElementById('searchCard').classList.remove('hidden');
+    document.getElementById('dashboardCard').classList.remove('hidden');
+    document.getElementById('searchStudentId').value = '';
+    document.getElementById('smartPasteInput').value = '';
+    document.getElementById('loggedInStudentId').textContent = '';
+    loggedInStudentId = '';
+
+    // 回到登入頁後重新啟動即時看板
+    startDashboardAutoRefresh();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function renderMembersData(members) {
+    const container = document.getElementById('membersContainer');
+    container.innerHTML = '';
+
+    members.forEach((m, idx) => {
+      addMemberInput();
+      const items = document.querySelectorAll('.member-item');
+      items[idx].querySelector('.m-name').value = m.name || '';
+      items[idx].querySelector('.m-dept').value = m.dept || '';
+      items[idx].querySelector('.m-id').value = m.id || '';
+    });
+  }
+
+  function addMemberInput() {
+    const items = document.querySelectorAll('.member-item');
+    if (items.length >= 15) return alert("一組最多15人");
+
+    const container = document.getElementById('membersContainer');
+    const div = document.createElement('div');
+    div.className = 'member-item';
+    
+    div.innerHTML = `
+      <div class="member-header">
+        <strong class="member-title">組員 ${items.length + 1}</strong>
+        <span class="action-btn-area"></span>
+      </div>
+      <div class="input-row">
+        <input type="text" class="m-name" placeholder="姓名" required>
+        <input type="text" class="m-dept" placeholder="系級" required>
+      </div>
+      <input type="text" class="m-id" placeholder="學號" required>
+    `;
+    
+    container.appendChild(div);
+    renumberMembers();
+  }
+
+  function removeMemberInput(btn) {
+    btn.closest('.member-item').remove();
+    renumberMembers();
+  }
+
+  function clearFirstMemberInput(btn) {
+    const item = btn.closest('.member-item');
+    item.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+  }
+
+  function clearAllInputsWithoutNotice() {
+    document.querySelectorAll('#membersContainer input[type="text"]').forEach(input => input.value = '');
+    document.getElementById('smartPasteInput').value = '';
+    document.querySelectorAll('input[name="optDate"]').forEach(radio => radio.checked = false);
+  }
+
+  function renumberMembers() {
+    const items = document.querySelectorAll('.member-item');
+    items.forEach((item, index) => {
+      const title = item.querySelector('.member-title');
+      const actionArea = item.querySelector('.action-btn-area');
+      
+      title.innerText = `組員 ${index + 1}`;
+
+      if (index === 0) {
+        actionArea.innerHTML = `<button type="button" class="btn-text-clear" onclick="clearFirstMemberInput(this)">清空此欄</button>`;
+      } else {
+        actionArea.innerHTML = `<button type="button" class="btn-del" onclick="removeMemberInput(this)">刪除</button>`;
+      }
+    });
+  }
+
+  function renderDashboard(data) {
+    const container = document.getElementById('dashboardArea');
+    if (!container) return;
+    if (!data) {
+      container.innerHTML = '<div style="color:#999; padding:12px 0;">無法取得狀況資料</div>';
+      return;
+    }
+
+    const dates = Object.keys(data).sort((a, b) => new Date(a) - new Date(b));
+    const row1 = dates.slice(0, 4);
+    const row2 = dates.slice(4);
+
+    function renderDateCell(date) {
+      const groups = data[date] || [];
+      const shortD = date.split('/')[1] + '/' + date.split('/')[2];
+      if (groups.length === 0) {
+        return '<td><span class="empty-cell">(尚無人報名)</span></td>';
+      }
+
+      let cell = '<td>';
+      groups.forEach((g, i) => {
+        const num = ['一','二','三'][i] || (i + 1);
+        const membersText = (typeof g === 'string' ? g : g.members) || '';
+        const topicText = (typeof g === 'object' && g.topic) ? String(g.topic) : '';
+        cell += `<div class="group-box"><strong>${shortD} 第${num}組</strong><br>${membersText.replace(/\n/g, '<br>')}`;
+        if (topicText) {
+          cell += `<br><span style="font-size:0.9em;">主題：${topicText.replace(/\n/g, '<br>')}</span>`;
+        }
+        cell += '</div>';
+      });
+      cell += '</td>';
+      return cell;
+    }
+
+    let html = '<table class="dashboard-table"><thead><tr><th class="group-col">日期</th>';
+    row1.forEach(d => html += `<th>${d.split('/')[1]}/${d.split('/')[2]}</th>`);
+    html += '</tr></thead><tbody><tr><td class="group-col"><strong>目前</strong></td>';
+    row1.forEach(d => html += renderDateCell(d));
+    html += '</tr></tbody>';
+
+    if (row2.length > 0) {
+      html += '<thead><tr><th class="group-col">日期</th>';
+      row2.forEach(d => html += `<th>${d.split('/')[1]}/${d.split('/')[2]}</th>`);
+      for (let i = row2.length; i < 4; i++) html += '<th style="background:#fafafa;"></th>';
+      html += '</tr></thead><tbody><tr><td class="group-col"><strong>目前</strong></td>';
+      row2.forEach(d => html += renderDateCell(d));
+      for (let i = row2.length; i < 4; i++) html += '<td style="background:#fafafa;"></td>';
+      html += '</tr></tbody>';
+    }
+
+    html += '</table>';
+    container.innerHTML = html;
+  }
+
+  function renderOptions(counts, maxLimit, selectedDate) {
+    const area = document.getElementById('dateOptionsArea');
+    let html = '';
+    STATIC_MASTER_CHOICES.forEach((choice, idx) => {
+      const cleanChoice = choice.trim();
+      const used = counts[cleanChoice] || 0;
+      const remain = maxLimit - used;
+      const isFull = used >= maxLimit;
+
+      const isMyCurrentDate = (selectedDate && cleanChoice === selectedDate);
+      const disabled = (isFull && !isMyCurrentDate) ? 'disabled' : '';
+      const checked = (isMyCurrentDate || (!selectedDate && idx === 0 && !isFull)) ? 'checked' : '';
+      
+      html += `
+        <label class="date-card">
+          <div>
+            <input type="radio" name="optDate" value="${cleanChoice}" ${disabled} ${checked}>
+            ${cleanChoice.replace(/^\d{4}\//, '')}
+          </div>
+          <span style="font-size:0.8em; color:${isFull && !isMyCurrentDate ? 'red' : '#28a745'}">
+            ${isMyCurrentDate ? '目前選擇' : (isFull ? '額滿' : '剩 ' + (remain > 0 ? remain : 0) + ' 名')}
+          </span>
+        </label>
+      `;
+    });
+    area.innerHTML = html;
+  }
+
+  document.getElementById('signupForm').onsubmit = async function(e) {
+    e.preventDefault();
+    const btnSubmit = document.getElementById('btnSubmit');
+    const selectedDate = document.querySelector('input[name="optDate"]:checked');
+    if (!selectedDate) return alert("請選擇日期！");
+
+    const members = [];
+    let hasInvalidId = false;
+
+    document.querySelectorAll('.member-item').forEach(item => {
+      const name = item.querySelector('.m-name').value.trim();
+      const id = item.querySelector('.m-id').value.trim();
+      const dept = item.querySelector('.m-dept').value.trim();
+
+      if (id.length < 8 || id.length > 11) hasInvalidId = true;
+      if (name) members.push({ name: name, dept: dept, id: id });
+    });
+
+    if (hasInvalidId) return alert("部分學號格式錯誤，請確定輸入長度為 8~11 碼");
+
+    const payload = {
+      rowIndex: document.getElementById('editingRowIndex').value,
+      date: selectedDate.value,
+      members: members
+    };
+
+    btnSubmit.disabled = true;
+    const originalText = btnSubmit.innerText;
+    btnSubmit.innerText = "資料處理中...";
+
+    try {
+      const res = await sendToGAS('submitForm', { payload: payload });
+      alert(res.message);
+      if (res.success) {
+        resetToSearch();
+      }
+    } finally {
+      btnSubmit.disabled = false;
+      btnSubmit.innerText = originalText;
+    }
+  };
+
+
+</script>
+</body>
+</html>
